@@ -1,9 +1,37 @@
 #!/usr/bin/python
 
+#
+# statsfetcher.py
+#
+# Pulls system metrics from a check_mk "Livestatus" server over the Interwebs
+# and stores them in circular buffers for use by the cube.
+#
+
 import socket
 import collections
 from collections import defaultdict
 import time
+from optparse import OptionParser
+
+
+# Keep up to MAX_STATS_BUFFER_SIZE readings in our ring buffer
+MAX_STATS_BUFFER_SIZE = 8
+
+
+def main():
+	parser = OptionParser(usage="usage: %prog -s hostname -p port")
+
+	parser.add_option("-s",dest="hostname",help="hostname of livestatus server")
+	parser.add_option("-p",dest="port",help="port of livestatus server")
+
+	global options, args
+	(options, args) = parser.parse_args()
+
+	if len(args) != 2:
+		parser.error("Wrong number of arguments")
+
+	
+
 
 # Keep up to MAX_STATS_BUFFER_SIZE readings in our ring buffer
 MAX_STATS_BUFFER_SIZE = 8
@@ -17,7 +45,7 @@ stats = makehash()
 
 def get_cpu_stats():
 	s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-	s.connect(('mc.onethree.net', 6557))
+	s.connect((args[0], int(args[1])))
 
 	s.send("GET services\nFilter: description ~ CPU util\nColumns: host_name perf_data\n")
 
@@ -58,4 +86,5 @@ def run():
 		time.sleep(60)
 
 if __name__ == "__main__":
+	main()
 	run()
