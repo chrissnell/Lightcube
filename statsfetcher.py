@@ -43,7 +43,7 @@ def main():
 # Keep up to MAX_STATS_BUFFER_SIZE readings in our ring buffer
 MAX_STATS_BUFFER_SIZE = 8
 
-# Easy way to create deep dicts of dicts.   Deep dicts.  Ugh.  Sorry.
+# Easy way to create deep dicts of dicts.  Heh.
 def makehash():
 	return collections.defaultdict(makehash)
 
