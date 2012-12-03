@@ -21,7 +21,7 @@ MAX_STATS_BUFFER_SIZE = 8
 def main():
 
 	# Set up a commandline argument parser
-	parser = OptionParser(usage="usage: %prog -s hostname -p port")
+	parser = OptionParser(usage="usage: %prog <hostname> <port>")
 
 	# Mandatory arguments
 	parser.add_option("-s",dest="hostname",help="hostname of livestatus server")
