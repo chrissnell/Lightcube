@@ -1,3 +1,10 @@
+#
+# Lightcube - a library for drawing graphics primitives on the Lightcube device.
+#     This library assembles primitives (such as lines, pixels, boxes, etc) into
+#     a frame which is sent across the network to a Lightcube.   The Lightcube
+#     runs a simple network framebuffer, taking the frames and displaying them
+#     on the cube.
+
 class Frame(object):
 
 	def __init__(self):
