@@ -29,18 +29,6 @@ class Color(object):
 		self.rgb = rgb
 
 
-def inclusive_range(first,last):
-	if first == last:
-		return [first]
-	if first < last:
-		# return our range but be incluside to 'last'
-		# because Python's range is not inclusive of the last number
-		return range(first, last + 1)
-	if start > finish:
-		# We'll need to count backwards (by -1)...and be inclusive (so we subtract 1 from finish)
-		return range(first, last - 1, -1)
-
-
 
 # Define some color constants
 RED = Color(rgb="880000")
@@ -69,6 +57,17 @@ class FrameRenderer(object):
 
 		return(slope)
 
+	def inclusive_range(self, first,last):
+		if first == last:
+			return [first]
+		if first < last:
+			# return our range but be inclusive to 'last'
+			# because Python's range is not inclusive of the last number
+			return range(first, last + 1)
+		if start > finish:
+			# We'll need to count backwards (by -1)...and be inclusive (so we subtract 1 from finish)
+			return range(first, last - 1, -1)
+
 
 
 	def draw_line(self, start, end, color=WHITE):
@@ -78,7 +77,7 @@ class FrameRenderer(object):
 		# This code is adapted from the implementation found here:  
 		#  http://www.barricane.com/2009/08/28/bresenhams-line-algorithm-in-python.html
 
-		# if this line rises (or falls) more than it runs...
+		# if this line rises more steeply than 45 deg
 		if abs(end.y - start.y) > abs(end.x - start.x):
 			steep = True
 		else:
@@ -86,6 +85,7 @@ class FrameRenderer(object):
 
 		if steep:
 			# swap x and y in the start and end points
+			# (reflecting it across the 45 deg line)
 			start.x, start.y = start.y, start.x
 			end.x, end.y = end.y, end.x
 		
@@ -107,7 +107,7 @@ class FrameRenderer(object):
 		else:
 			y_step = -1
 
-		for x in inclusive_range(start.x, end.x):
+		for x in self.inclusive_range(start.x, end.x):
 			if steep:
 				self._frame.set_color_at(y,x, color)
 			else:
@@ -120,12 +120,47 @@ class FrameRenderer(object):
 				error = error + delta_x
 
 
+	def draw_box(self, LL, width, height, color=WHITE):
+
+		# LL -> Lower Left
+		if (LL.x + width) > 8:
+			# LR -> Lower Right
+			LR_x = 7
+		else:
+			LR_x = LL.x + width - 1
+
+		if (LL.y + height) > 8:
+			# UL -> Upper Left
+			UL_y = 7
+		else:
+			UL_y = LL.y + height - 1
 
 
+		for x in self.inclusive_range(LL.x, LR_x):
+			line_start = Coordinate(x, LL.y)
+			line_end = Coordinate(x, UL_y)
+			self.draw_line(line_start, line_end)
+			x += 1
+
+		print "LL: (" + str(LL.x) + "," + str(LL.y) + ")"
+		print "width: " + str(width) + "   height: " + str(height)
+		print "UR: (" + str(LR_x) + "," + str(UL_y) + ")"
+
+
+# Testing...
+
+# Create a new Frame
 myframe = Frame()
+# and a FrameRenderer
 myrenderer = FrameRenderer(frame=myframe)
 
-line_start = Coordinate(x=0, y=0)
-line_end = Coordinate(x=0, y=7)
+# Define the start and end points of the line
+line_start = Coordinate(x=0, y=3)
+line_end = Coordinate(x=7, y=3)
+# and draw a red line between them
+myrenderer.draw_line(line_start, line_end, RED)
 
-myrenderer.draw_line(line_start, line_end)
+# Define the lower-left corner of a box
+box_ll = Coordinate(x=0, y=0)
+# and draw a 9x12 box starting there
+myrenderer.draw_box(box_ll, 9, 12)
