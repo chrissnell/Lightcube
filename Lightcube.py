@@ -47,16 +47,6 @@ class FrameRenderer(object):
 	def __init__(self,frame):
 		self._frame = frame
 
-	def calc_slope(self, start, end):
-		x1 = start.x
-		x2 = end.x
-		y1 = start.y
-		y2 = end.y
-
-		slope = ((x1 - x2) / (y1 - y2))
-
-		return(slope)
-
 	def inclusive_range(self, first,last):
 		if first == last:
 			return [first]
