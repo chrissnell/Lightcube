@@ -8,4 +8,4 @@ A wooden cube; a colorful, programmable information visualizer for your desk.
 Architecture
 ============
 
-![Lightcube architecture](https://github.com/chrissnell/Lightcube/blob/master/LightcubeArchitecture.png)
+![Lightcube architecture](https://raw.github.com/chrissnell/Lightcube/master/LightcubeArchitecture.png)
