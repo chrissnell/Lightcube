@@ -1,8 +1,8 @@
 Lightcube
 =========
 
-![The Lightcube](https://dl.dropboxusercontent.com/u/16837290/output.chrissnell.com/color_8x8_matrix.jpg)
- A colorful, programmable information visualizer for your desk.  The Lightcube is an 8x8 matrix
+<div style="float: left"><img src="https://dl.dropboxusercontent.com/u/16837290/output.chrissnell.com/color_8x8_matrix.jpg" /></div> 
+A colorful, programmable information visualizer for your desk.  The Lightcube is an 8x8 matrix
 of RGB LEDs enclosed in a small wooden cube and connected to the network via WiFi/Ethernet.
 Client applications can use a simple Python library to draw simple graphics primitives such as
 dots, lines, boxes, bar graphs, etc., and send them over the network to the Lightcube.   The Lightcube
