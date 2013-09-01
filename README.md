@@ -1,6 +1,6 @@
 Lightcube
 =========
-<table border=0 cellpadding=8 style="border: none;">
+<table border=0 cellpadding=8 style="border: 0px;">
  <td width=200 height=133 align=middle valign=top>
   <img width=200 height=133 src="https://dl.dropboxusercontent.com/u/16837290/output.chrissnell.com/color_8x8_matrix.jpg" />
  </td>
