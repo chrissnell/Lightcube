@@ -122,26 +122,34 @@ class FrameRenderer(object):
 
 	def draw_box(self, LL, width, height, color=WHITE):
 
-		# LL -> Lower Left
+		# LL -> Lower Left corner
+		# LR -> Lower Right corner
+		# UL -> Upper Left corner
+
 		if (LL.x + width) > 8:
-			# LR -> Lower Right
+			# If this box is wider than 8 columns, truncate its width at x=7
 			LR_x = 7
 		else:
+			# Box is less than 8 columns wide, so calculate the lower-right corner (x-component)
 			LR_x = LL.x + width - 1
 
 		if (LL.y + height) > 8:
-			# UL -> Upper Left
+			# If this box is taller than 8 rows, truncate its height at y=7
 			UL_y = 7
 		else:
+			# Box is less than 8 rows high, so calculate the upper-left corner (y-component)
 			UL_y = LL.y + height - 1
 
 
+		# Iterate through each column of our box and draw vertical lines
+		# from the baseline up to the top-most extent
 		for x in self.inclusive_range(LL.x, LR_x):
 			line_start = Coordinate(x, LL.y)
 			line_end = Coordinate(x, UL_y)
-			self.draw_line(line_start, line_end)
+			self.draw_line(line_start, line_end, color)
 			x += 1
 
+		# For debugging
 		print "LL: (" + str(LL.x) + "," + str(LL.y) + ")"
 		print "width: " + str(width) + "   height: " + str(height)
 		print "UR: (" + str(LR_x) + "," + str(UL_y) + ")"
