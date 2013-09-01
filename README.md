@@ -1,8 +1,8 @@
 Lightcube
 =========
-<table>
+<table border=0>
  <td align=middle valign=top>
-  <img style="padding:9px;" src="https://dl.dropboxusercontent.com/u/16837290/output.chrissnell.com/color_8x8_matrix.jpg" />
+  <img src="https://dl.dropboxusercontent.com/u/16837290/output.chrissnell.com/color_8x8_matrix.jpg" />
  </td>
  <td align=left valign=top>
 A colorful, programmable information visualizer for your desk.  The Lightcube is an 8x8 matrix
