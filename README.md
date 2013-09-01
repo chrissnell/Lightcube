@@ -1,7 +1,7 @@
 Lightcube
 =========
 <table border=0 cellpadding=8 style="border: 0px;">
- <td width=200 height=133 align=middle valign=top>
+ <td width=200 height=133 align=middle valign=middle>
   <img width=200 height=133 src="https://dl.dropboxusercontent.com/u/16837290/output.chrissnell.com/color_8x8_matrix.jpg" />
  </td>
  <td align=left valign=top>
@@ -22,6 +22,6 @@ Things that the Lightcube could display:
 * Up/down status of all of your servers, by server type
 
 Architecture
-============
+------------
 
 ![Lightcube architecture](https://raw.github.com/chrissnell/Lightcube/master/LightcubeArchitecture.png)
