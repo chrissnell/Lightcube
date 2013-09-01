@@ -61,25 +61,28 @@ class FrameRenderer(object):
 
 
 	def draw_line(self, start, end, color=WHITE):
-
+		#
+		# draw_line() - Draws a Bresenham-style line between two coordinates
+		# 
+		# params:	start - The starting point of the line (of class "Coordinate")
+		#			end - The ending point of the line (of class "Coordinate")
+		#			color - Color used to draw line (of class "Color") [optional]
+		#
+		#
 		# This is an implementation of Bresenham's line algorithm (optimized version)
 		# which can be found at:  http://en.wikipedia.org/wiki/Bresenham's_line_algorithm
 		# This code is adapted from the implementation found here:  
 		#  http://www.barricane.com/2009/08/28/bresenhams-line-algorithm-in-python.html
 
-		# if this line rises more steeply than 45 deg
 		if abs(end.y - start.y) > abs(end.x - start.x):
 			steep = True
 		else:
 			steep = False
 
 		if steep:
-			# swap x and y in the start and end points
-			# (reflecting it across the 45 deg line)
 			start.x, start.y = start.y, start.x
 			end.x, end.y = end.y, end.x
 		
-		# If it slopes down, flip start and endpoints		
 		if start.x > end.x:
 			start.x, end.x = end.x, start.x
 			start.y, end.y = end.y, start.y
@@ -111,6 +114,15 @@ class FrameRenderer(object):
 
 
 	def draw_box(self, LL, width, height, color=WHITE):
+		#
+		# draw_box() - Draws a filled-in box
+		# 
+		# params:	LL - The lower left corner of the box (of class "Coordinate")
+		#			width - The width of the box
+		#			height - The height of the box
+		#			color - Color used to draw line (of class "Color") [optional]
+		#
+
 
 		# LL -> Lower Left corner
 		# LR -> Lower Right corner
