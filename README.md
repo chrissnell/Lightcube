@@ -40,7 +40,20 @@ The Lightcube packets are constructed as follows:
     0                   1                   2                   3   
     0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-   |     Header    |    Protocol   |   Display     |   Display     |
-   |               |    Version    |    Width      |    Height     |
+   |     Header    |    Protocol   |    Display    |    Display    |
+   |               |    Version    |     Width     |     Height    |
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |    Retain     |C|                                             |
+   |Delay (10/sec) |L|          Reserved for future use            |
+   |               |S|                                             |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+
+
+   Header [8 bits] - Will always be 01101011
+   Protocol Version [8 bits] - Currently 00000001
+   Display Width [8 bits] - The number of horizontal LEDs in the display.  Currently 00001000 (which is 8 in decimal)
+   Display Height [8 bits] - The number of vertical LEDs in the display.   Currently 00001000 (which is 8 in decimal)
+   Retain Delay (seconds) [8 bits] - The time (in 1/10 second increments) to display the current frame before advancing 
+                                     to the next one.  If set to 00000000 (zero), the frame is displayed indefinitely.
+                                     
 ```
