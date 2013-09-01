@@ -25,3 +25,22 @@ Architecture
 ------------
 
 ![Lightcube architecture](https://raw.github.com/chrissnell/Lightcube/master/LightcubeArchitecture.png)
+
+
+Lightcube Protocol
+------------------
+The Lightcube receives its graphical instructions in the form of data frames sent over a TCP/IP network.
+The data is sent in a binary format, encoded in UDP datagrams.   The format is designed to be easily
+parsed by low-end microcontrollers such as the Arduino and is intented to acommodate both the current
+8x8 LED Lightcube, along with future Lightcubes with more LEDs.  
+
+The Lightcube packets are constructed as follows:
+
+```
+    0                   1                   2                   3   
+    0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |     Header    |    Protocol   |   Display     |   Display     |
+   |               |    Version    |    Width      |    Height     |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+```
