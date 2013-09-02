@@ -76,7 +76,6 @@ The Lightcube packets are constructed as follows:
    Display Width [8 bits]            The number of horizontal LEDs in the display.  User-defined.
 
    Display Height [8 bits]           The number of vertical LEDs in the display.   User-defined. 
-                                     (which is 8 in decimal)
 
    Retain Delay (seconds) [8 bits]   The time (in 1/10 second increments) to display the current frame before advancing 
                                      to the next one.  If set to 00000000 (zero), the frame is displayed indefinitely.
