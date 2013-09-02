@@ -1,3 +1,7 @@
+import struct
+from ctypes import *
+
+
 #
 # Lightcube - a library for drawing graphics primitives on the Lightcube device.
 #     This library assembles primitives (such as lines, pixels, boxes, etc) into
@@ -22,9 +26,13 @@
 #     +-- -- -- -- -- -- -- --> X
 #       0  1  2  3  4  5  6  7
 
+
+
+
 class Frame(object):
 
-	def __init__(self):
+	def __init__(self, retain_delay):
+		self._retain_delay = retain_delay
 		self._data = [ [ 0, 0, 0, 0, 0, 0, 0, 0], [ 0, 0, 0, 0, 0, 0, 0, 0],[ 0, 0, 0, 0, 0, 0, 0, 0],[ 0, 0, 0, 0, 0, 0, 0, 0],[ 0, 0, 0, 0, 0, 0, 0, 0],[ 0, 0, 0, 0, 0, 0, 0, 0],[ 0, 0, 0, 0, 0, 0, 0, 0],[ 0, 0, 0, 0, 0, 0, 0, 0] ]
 
 	def set_color_at(self, x, y, color):
@@ -46,8 +54,7 @@ class Color(object):
 		self.rgb = rgb
 
 
-
-# Define some color constants
+# Define some generic colors
 RED = Color(rgb="880000")
 WHITE = Color(rgb="ffffff")
 BLUE = Color(rgb="0000aa")
@@ -55,6 +62,57 @@ GREEN = Color(rgb="215E21")
 YELLOW = Color(rgb="ffc400")
 BLACK = Color(rgb="000000")
 GREY = Color(rgb="222222")
+
+
+class FramePacket(Structure):
+	_fields_ = [ ('header', c_uint8), ('proto_version', c_uint8), ('display_width', c_uint8), ('display_height', c_uint8), \
+	             ('retain_delay', c_uint8), ('RESERVED_SPACE', c_uint8 * 24) ]
+
+
+class AssembledFramePacket(object):
+	def __init__(self,frame):
+		self._frame = frame
+
+	# c = (a << 4) + b
+	# packed = struct.pack('!H',c)
+	# unpacked = struct.unpack('!H',packed)
+	# a1 = bin(unpacked[0] >> 4)
+	# b1= bin(unpacked[0] & 0b00001111)
+
+	def create_packet(self):
+
+		# Frame ID
+		FRAME_ID = 0x7
+
+		# Frame Commands
+		CMD_PING = 0x0
+		CMD_STORE = 0x1
+		CMD_PLAY = 0x2
+		CMD_DEMO = 0x3
+		CMD_CLEAR = 0xE
+		CMD_WIPE = 0xF
+
+		# Protocol Version (currently 1)
+		PROTO_VER = 0x1
+
+		# Display Parameters
+		DISP_WIDTH = 8
+		DISP_HEIGHT = 8
+
+		# Frame Retain Delay, n * 1/10 second, n = (0x00..0xff) inclusive
+		#      Max delay = 25.5 sec
+		retain_delay = self._frame._retain_delay
+
+		RESERVED_SPACE = 0x0, 0x0, 0x0, 0x0
+
+		f_header = (FRAME_ID << 4) + CMD_STORE
+
+		packet = FramePacket(f_header, PROTO_VER, DISP_WIDTH, DISP_HEIGHT, retain_delay, RESERVED_SPACE)
+
+		# For debugging
+		print "f_header: " + str(f_header)
+		print "retain_delay: " + str(retain_delay)
+		print "DISP_HEIGHT: " + str(packet.display_height)
 
 
 
@@ -177,7 +235,7 @@ class FrameRenderer(object):
 # Testing...
 
 # Create a new Frame
-myframe = Frame()
+myframe = Frame(retain_delay=0xA)
 # and a FrameRenderer
 myrenderer = FrameRenderer(frame=myframe)
 
@@ -191,3 +249,6 @@ myrenderer.draw_line(line_start, line_end, RED)
 box_ll = Coordinate(x=0, y=0)
 # and draw a 9x12 box starting there
 myrenderer.draw_box(box_ll, 9, 12)
+
+packet = AssembledFramePacket(frame=myframe)
+packet.create_packet()
