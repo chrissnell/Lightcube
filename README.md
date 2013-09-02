@@ -55,5 +55,8 @@ The Lightcube packets are constructed as follows:
    Display Height [8 bits] - The number of vertical LEDs in the display.   Currently 00001000 (which is 8 in decimal)
    Retain Delay (seconds) [8 bits] - The time (in 1/10 second increments) to display the current frame before advancing 
                                      to the next one.  If set to 00000000 (zero), the frame is displayed indefinitely.
+   CLS [1 bit] - Clear the display by turning all LEDs off.  All frame data is ignored, though the retain delay is
+                 still honored.   CLS + retain delay will blank the screen for the time period specified by the retain
+                 delay.
                                      
 ```
