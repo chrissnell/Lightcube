@@ -31,9 +31,15 @@ from ctypes import *
 
 class Frame(object):
 
-	def __init__(self, retain_delay):
+	def __init__(self, retain_delay=0):
 		self._retain_delay = retain_delay
-		self._data = [ [ 0, 0, 0, 0, 0, 0, 0, 0], [ 0, 0, 0, 0, 0, 0, 0, 0],[ 0, 0, 0, 0, 0, 0, 0, 0],[ 0, 0, 0, 0, 0, 0, 0, 0],[ 0, 0, 0, 0, 0, 0, 0, 0],[ 0, 0, 0, 0, 0, 0, 0, 0],[ 0, 0, 0, 0, 0, 0, 0, 0],[ 0, 0, 0, 0, 0, 0, 0, 0] ]
+
+		# Display Parameters
+		# This is where we define the width and height (in LEDs) of our Lightcube
+		self._DISP_WIDTH = 8
+		self._DISP_HEIGHT = 8
+
+		self._data = [[0 for x in xrange(self._DISP_WIDTH)] for x in xrange(self._DISP_HEIGHT)]
 
 	def set_color_at(self, x, y, color):
 		print x, y
@@ -65,8 +71,14 @@ GREY = Color(rgb="222222")
 
 
 class FramePacket(Structure):
-	_fields_ = [ ('header', c_uint8), ('proto_version', c_uint8), ('display_width', c_uint8), ('display_height', c_uint8), \
-	             ('retain_delay', c_uint8), ('RESERVED_SPACE', c_uint8 * 24) ]
+
+	frame=Frame()
+
+	# Define the data structure of our packet using the ctypes modules
+	_fields_ = [ ('header', c_uint8), ('proto_version', c_uint8), \
+	             ('display_width', c_uint8), ('display_height', c_uint8), \
+	             ('retain_delay', c_uint8), ('RESERVED_SPACE', c_uint8 * 3), \
+	             ('frame_data', c_uint8 * (frame._DISP_WIDTH * frame._DISP_HEIGHT)) ]
 
 
 class AssembledFramePacket(object):
@@ -95,24 +107,26 @@ class AssembledFramePacket(object):
 		# Protocol Version (currently 1)
 		PROTO_VER = 0x1
 
-		# Display Parameters
-		DISP_WIDTH = 8
-		DISP_HEIGHT = 8
-
 		# Frame Retain Delay, n * 1/10 second, n = (0x00..0xff) inclusive
 		#      Max delay = 25.5 sec
 		retain_delay = self._frame._retain_delay
 
-		RESERVED_SPACE = 0x0, 0x0, 0x0, 0x0
+		RESERVED_SPACE = 0x0, 0x0, 0x0
 
+		# Shift the FRAME_ID four bits to the left and append CMD_STORE
+		# This will produce a single 8-bit value that we'll use as our packet's header
 		f_header = (FRAME_ID << 4) + CMD_STORE
 
-		packet = FramePacket(f_header, PROTO_VER, DISP_WIDTH, DISP_HEIGHT, retain_delay, RESERVED_SPACE)
+		# Assemble the finished packet
+		packet = FramePacket(f_header, PROTO_VER, self._frame._DISP_WIDTH, self._frame._DISP_HEIGHT, retain_delay, RESERVED_SPACE)
 
 		# For debugging
 		print "f_header: " + str(f_header)
 		print "retain_delay: " + str(retain_delay)
 		print "DISP_HEIGHT: " + str(packet.display_height)
+		f = open("foo","wb")
+		f.write(packet)
+		f.close()
 
 
 
@@ -203,16 +217,16 @@ class FrameRenderer(object):
 		# LR -> Lower Right corner
 		# UL -> Upper Left corner
 
-		if (LL.x + width) > 8:
-			# If this box is wider than 8 columns, truncate its width at x=7
-			LR_x = 7
+		if (LL.x + width) > self._frame._DISP_WIDTH:
+			# If this box is wider than 8 columns, truncate its width at x=(frame._DISP_WIDTH - 1)
+			LR_x = (self._frame._DISP_WIDTH - 1)
 		else:
 			# Box is less than 8 columns wide, so calculate the lower-right corner (x-component)
 			LR_x = LL.x + width - 1
 
-		if (LL.y + height) > 8:
+		if (LL.y + height) > self._frame._DISP_HEIGHT:
 			# If this box is taller than 8 rows, truncate its height at y=7
-			UL_y = 7
+			UL_y = (self._frame._DISP_HEIGHT - 1)
 		else:
 			# Box is less than 8 rows high, so calculate the upper-left corner (y-component)
 			UL_y = LL.y + height - 1
