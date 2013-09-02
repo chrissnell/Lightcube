@@ -44,8 +44,8 @@ The Lightcube packets are constructed as follows:
    |       |       |    Version    |     Width     |     Height    |
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
    |    Retain     |                                               |
-   |Delay (10/sec) |            Reserved for future use            |
-   |               |                                               |
+   |    Delay      |            Reserved for future use            |
+   | (n * 1/10 sec)|                                               |
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
    |Pixel(0,0) RED |Pixel(0,0) GRN |Pixel(0,0) BLU |Pixel(1,0) RED |
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
