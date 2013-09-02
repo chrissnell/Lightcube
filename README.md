@@ -43,9 +43,9 @@ The Lightcube packets are constructed as follows:
    |Header |  CMD  |    Protocol   |    Display    |    Display    |
    |       |       |    Version    |     Width     |     Height    |
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-   |    Retain     |C|                                             |
-   |Delay (10/sec) |L|          Reserved for future use            |
-   |               |S|                                             |
+   |    Retain     |                                               |
+   |Delay (10/sec) |            Reserved for future use            |
+   |               |                                               |
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
    |Pixel(0,0) RED |Pixel(0,0) GRN |Pixel(0,0) BLU |Pixel(1,0) RED |
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
@@ -64,9 +64,11 @@ The Lightcube packets are constructed as follows:
    CMD [4 bits]						 Command to perform
                                      0x0 - "ping"  - Instructs the Lightcube to send an acknoledgement that it is
                                                      up and responding to commands
-                                     0x1 - "store" - Store this frame in a display queue
+                                     0x1 - "store" - Store this frame in a frame queue
                                      0x2 - "play"  - Display all frames in queue (in order received)
                                      0x3 - "demo"  - Display a demo screen
+                                     0xE - "clear" - Blank all pixels but leave frame queue intact.
+                                                     Leave screen blank for time indicated by Retain Delay
                                      0xF - "wipe"  - Wipe all frames from queue and blank all pixels
 
    Protocol Version [8 bits]         Currently 00000001
@@ -80,9 +82,9 @@ The Lightcube packets are constructed as follows:
    Retain Delay (seconds) [8 bits]   The time (in 1/10 second increments) to display the current frame before advancing 
                                      to the next one.  If set to 00000000 (zero), the frame is displayed indefinitely.
 
-   CLS [1 bit]                       Clear the display by turning all LEDs off.  All frame data is ignored, though the
-                                     retain delay is still honored.   CLS + retain delay will blank the screen for the 
-                                     time period specified by the retain delay.
+
+   Reserved Space [24 bits]          Reserved for future use.  Any value stored in these bits is currently ignored.
+
                                      
    Pixel Data [24 bits/pixel]        Pixel data for the frame, starting at (0,0) in the lower-left corner and moving
                                      down the row.  When each row is complete, the data continues at the left-most cell
