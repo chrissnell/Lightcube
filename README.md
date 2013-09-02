@@ -40,7 +40,7 @@ The Lightcube packets are constructed as follows:
     0                   1                   2                   3   
     0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-   |Header |  CMD  |    Protocol   |    Display    |    Display    |
+   |  ID   |  CMD  |    Protocol   |    Display    |    Display    |
    |       |       |    Version    |     Width     |     Height    |
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
    |    Retain     |                                               |
@@ -59,19 +59,19 @@ The Lightcube packets are constructed as follows:
    Note that one tick mark represents one bit position.
 
 
-   Header [4 bits]                   Will always be 0111
+   Frame ID [4 bits]                 Will always be 0x7
 
    CMD [4 bits]						 Command to perform
-                                     0x0 - "ping"  - Instructs the Lightcube to send an acknoledgement that it is
+                                     0x0 - "PING"  - Instructs the Lightcube to send an acknoledgement that it is
                                                      up and responding to commands
-                                     0x1 - "store" - Store this frame in a frame queue
-                                     0x2 - "play"  - Display all frames in queue (in order received)
-                                     0x3 - "demo"  - Display a demo screen
-                                     0xE - "clear" - Blank all pixels but leave frame queue intact.
+                                     0x1 - "STORE" - Store this frame in a frame queue
+                                     0x2 - "PLAY"  - Display all frames in queue (in order received)
+                                     0x3 - "DEMO"  - Display a demo screen
+                                     0xE - "CLEAR" - Blank all pixels but leave frame queue intact.
                                                      Leave screen blank for time indicated by Retain Delay
-                                     0xF - "wipe"  - Wipe all frames from queue and blank all pixels
+                                     0xF - "WIPE"  - Wipe all frames from queue and blank all pixels
 
-   Protocol Version [8 bits]         Currently 00000001
+   Protocol Version [8 bits]         Currently 0x1
 
    Display Width [8 bits]            The number of horizontal LEDs in the display.  Currently 00001000 
                                      (which is 8 in decimal)
