@@ -56,6 +56,7 @@ The Lightcube packets are constructed as follows:
    |Pixel(6,7) BLU |Pixel(7,7) RED |Pixel(7,7) GRN |Pixel(7,7) BLU |
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 
+   Note that one tick mark represents one bit position.
 
 
    Header [4 bits]                   Will always be 0111
