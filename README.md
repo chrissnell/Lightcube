@@ -73,10 +73,9 @@ The Lightcube packets are constructed as follows:
 
    Protocol Version [8 bits]         Currently 0x1
 
-   Display Width [8 bits]            The number of horizontal LEDs in the display.  Currently 00001000 
-                                     (which is 8 in decimal)
+   Display Width [8 bits]            The number of horizontal LEDs in the display.  User-defined.
 
-   Display Height [8 bits]           The number of vertical LEDs in the display.   Currently 00001000 
+   Display Height [8 bits]           The number of vertical LEDs in the display.   User-defined. 
                                      (which is 8 in decimal)
 
    Retain Delay (seconds) [8 bits]   The time (in 1/10 second increments) to display the current frame before advancing 
