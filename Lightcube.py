@@ -59,12 +59,15 @@ class Color(object):
 		self.rgb = rgb
 
 	def get_red(self):
+		# Mask the two left-most bytes and bitshift right 16 bits to get Red component
 		return (self.rgb & 0xff0000) >> 16
 
 	def get_green(self):
+		# Mask the two center bytes and bitshift right 8 bits to get the Green component
 		return (self.rgb & 0x00ff00) >> 8
 
 	def get_blue(self):
+		# Mask the two right-most bytes to get the Blue component
 		return (self.rgb & 0x0000ff)
 
 
@@ -105,19 +108,25 @@ class AssembledFramePacket(object):
 
 	def create_packet(self):
 
+		# For our packet, we're going to create one long list of bytes.
+		# R, G, and B values for each pixel will each live in their own
+		# element of this list (in RGB sequence, for each pixel in the display)		
 		frame_data = list()
+
+		# Iterate through the rows of our frame
 		for row in self._frame._data:
+			# Iterate through each column of the row
 			for color in row:
 				#print('Color is: {} --> ({}, {}, {})'.format(
 				#	hex(color.rgb),
 				#	color.get_red(),
 				#	color.get_green(),
 				#	color.get_blue()))
+
+				# Append each color component to the list
 				frame_data.append(color.get_red())
 				frame_data.append(color.get_green())
 				frame_data.append(color.get_blue())
-
-#				frame_data.append(blue(color))
 
 
 		# print "frame_data:  \n" + str((c for c in frame_data))
@@ -166,8 +175,8 @@ class AssembledFramePacket(object):
 
 		# Create a new UDP socket 
 		sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-
 		sock.sendto(self.packet, (dest,port))
+		print("Sending packet to {}:{}".format(dest, port))
 
 
 
