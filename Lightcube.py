@@ -42,7 +42,7 @@ class Frame(object):
 		self._data = [[0 for x in xrange(self._DISP_WIDTH)] for x in xrange(self._DISP_HEIGHT)]
 
 	def set_color_at(self, x, y, color):
-		self._data[y][x] = color.rgb
+		self._data[y][x] = color
 
 
 class Coordinate(object):
@@ -58,26 +58,39 @@ class Color(object):
 	def __init__(self, rgb):
 		self.rgb = rgb
 
+	def get_red(self):
+		return (self.rgb & 0xff0000) >> 16
+
+	def get_green(self):
+		return (self.rgb & 0x00ff00) >> 8
+
+	def get_blue(self):
+		return (self.rgb & 0x0000ff)
+
+
 
 # Define some generic colors
-RED = Color(rgb="880000")
-WHITE = Color(rgb="ffffff")
-BLUE = Color(rgb="0000aa")
-GREEN = Color(rgb="215E21")
-YELLOW = Color(rgb="ffc400")
-BLACK = Color(rgb="000000")
-GREY = Color(rgb="222222")
+RED = Color(rgb=0x880000)
+WHITE = Color(rgb=0xffffff)
+BLUE = Color(rgb=0x0000aa)
+GREEN = Color(rgb=0x215E21)
+YELLOW = Color(rgb=0xffc400)
+BLACK = Color(rgb=0x000000)
+GREY = Color(rgb=0x222222)
 
 
 class FramePacket(Structure):
 
 	frame=Frame()
 
+	# calculate the size (in bytes) of our frame data
+	frame_data_size = frame._DISP_WIDTH * frame._DISP_HEIGHT * 3
+
 	# Define the data structure of our packet using the ctypes modules
 	_fields_ = [ ('header', c_uint8), ('proto_version', c_uint8), \
 	             ('display_width', c_uint8), ('display_height', c_uint8), \
 	             ('retain_delay', c_uint8), ('RESERVED_SPACE', c_uint8 * 3), \
-	             ('frame_data', c_uint8 * (frame._DISP_WIDTH * frame._DISP_HEIGHT)) ]
+	             ('frame_data', c_uint8 * frame_data_size) ]
 
 
 class AssembledFramePacket(object):
@@ -91,6 +104,26 @@ class AssembledFramePacket(object):
 	# b1= bin(unpacked[0] & 0b00001111)
 
 	def create_packet(self):
+
+		frame_data = list()
+		for row in self._frame._data:
+			for color in row:
+				#print('Color is: {} --> ({}, {}, {})'.format(
+				#	hex(color.rgb),
+				#	color.get_red(),
+				#	color.get_green(),
+				#	color.get_blue()))
+				frame_data.append(color.get_red())
+				frame_data.append(color.get_green())
+				frame_data.append(color.get_blue())
+
+#				frame_data.append(blue(color))
+
+
+		# print "frame_data:  \n" + str((c for c in frame_data))
+
+		frame_data_ctype = (c_uint8 * len(frame_data))(*frame_data)
+
 
 		# Frame ID
 		FRAME_ID = 0x7
@@ -117,7 +150,8 @@ class AssembledFramePacket(object):
 		f_header = (FRAME_ID << 4) + CMD_STORE
 
 		# Assemble the finished packet
-		self.packet = FramePacket(f_header, PROTO_VER, self._frame._DISP_WIDTH, self._frame._DISP_HEIGHT, retain_delay, RESERVED_SPACE)
+		self.packet = FramePacket(f_header, PROTO_VER, self._frame._DISP_WIDTH, self._frame._DISP_HEIGHT, \
+		                          retain_delay, RESERVED_SPACE, frame_data_ctype)
 
 		# For debugging
 		# print "f_header: " + str(f_header)
