@@ -1,5 +1,5 @@
-import struct
 from ctypes import *
+import socket
 
 
 #
@@ -42,7 +42,6 @@ class Frame(object):
 		self._data = [[0 for x in xrange(self._DISP_WIDTH)] for x in xrange(self._DISP_HEIGHT)]
 
 	def set_color_at(self, x, y, color):
-		print x, y
 		self._data[y][x] = color.rgb
 
 
@@ -118,15 +117,24 @@ class AssembledFramePacket(object):
 		f_header = (FRAME_ID << 4) + CMD_STORE
 
 		# Assemble the finished packet
-		packet = FramePacket(f_header, PROTO_VER, self._frame._DISP_WIDTH, self._frame._DISP_HEIGHT, retain_delay, RESERVED_SPACE)
+		self.packet = FramePacket(f_header, PROTO_VER, self._frame._DISP_WIDTH, self._frame._DISP_HEIGHT, retain_delay, RESERVED_SPACE)
 
 		# For debugging
-		print "f_header: " + str(f_header)
-		print "retain_delay: " + str(retain_delay)
-		print "DISP_HEIGHT: " + str(packet.display_height)
-		f = open("foo","wb")
-		f.write(packet)
-		f.close()
+		# print "f_header: " + str(f_header)
+		# print "retain_delay: " + str(retain_delay)
+		# print "DISP_HEIGHT: " + str(self.packet.display_height)
+		#f = open("foo","wb")
+		#f.write(self.packet)
+		#f.close()
+
+
+	def send_packet(self,dest,port):
+
+		# Create a new UDP socket 
+		sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+
+		sock.sendto(self.packet, (dest,port))
+
 
 
 
@@ -241,28 +249,6 @@ class FrameRenderer(object):
 			x += 1
 
 		# For debugging
-		print "LL: (" + str(LL.x) + "," + str(LL.y) + ")"
-		print "width: " + str(width) + "   height: " + str(height)
-		print "UR: (" + str(LR_x) + "," + str(UL_y) + ")"
-
-
-# Testing...
-
-# Create a new Frame
-myframe = Frame(retain_delay=0xA)
-# and a FrameRenderer
-myrenderer = FrameRenderer(frame=myframe)
-
-# Define the start and end points of the line
-line_start = Coordinate(x=0, y=3)
-line_end = Coordinate(x=7, y=3)
-# and draw a red line between them
-myrenderer.draw_line(line_start, line_end, RED)
-
-# Define the lower-left corner of a box
-box_ll = Coordinate(x=0, y=0)
-# and draw a 9x12 box starting there
-myrenderer.draw_box(box_ll, 9, 12)
-
-packet = AssembledFramePacket(frame=myframe)
-packet.create_packet()
+		# print "LL: (" + str(LL.x) + "," + str(LL.y) + ")"
+		# print "width: " + str(width) + "   height: " + str(height)
+		# print "UR: (" + str(LR_x) + "," + str(UL_y) + ")"
