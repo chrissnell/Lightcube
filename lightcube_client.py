@@ -26,6 +26,11 @@ box_ll = Lightcube.Coordinate(x=0, y=0)
 # and draw a 9x12 box starting there
 myrenderer.draw_box(box_ll, 9, 12)
 
+# Create a new assembled frame packet
 packet = Lightcube.AssembledFramePacket(frame=myframe)
+
+# and populate it with data
 packet.create_packet()
+
+# and send it over the wire
 packet.send_packet("127.0.0.1", 7070)
