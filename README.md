@@ -95,6 +95,5 @@ The Lightcube packets are constructed as follows:
 
                                      The total packet size is determined by the Display Width and Display Height values.
                                      For an 8x8 Lightcube, this would be 200 bytes (8 bytes frame header, 
-                                     196 bytes frame data).
-
+                                     192 bytes frame data).
 ```
