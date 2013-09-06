@@ -39,7 +39,7 @@ class Frame(object):
 		self._DISP_WIDTH = 8
 		self._DISP_HEIGHT = 8
 
-		self._data = [[0 for x in xrange(self._DISP_WIDTH)] for x in xrange(self._DISP_HEIGHT)]
+		self._data = [[BLACK for x in xrange(self._DISP_WIDTH)] for x in xrange(self._DISP_HEIGHT)]
 
 	def set_color_at(self, x, y, color):
 		self._data[y][x] = color
@@ -73,10 +73,10 @@ class Color(object):
 
 
 # Define some generic colors
-RED = Color(rgb=0x880000)
+RED = Color(rgb=0xFF0000)
 WHITE = Color(rgb=0xffffff)
-BLUE = Color(rgb=0x0000aa)
-GREEN = Color(rgb=0x215E21)
+BLUE = Color(rgb=0x0000FF)
+GREEN = Color(rgb=0x00FF00)
 YELLOW = Color(rgb=0xffc400)
 BLACK = Color(rgb=0x000000)
 GREY = Color(rgb=0x222222)
@@ -251,6 +251,11 @@ class FrameRenderer(object):
 			if error < 0:
 				y = y + y_step
 				error = error + delta_x
+
+
+
+	def draw_point(self, coord, color=WHITE):
+		self._frame.set_color_at(coord.x, coord.y, color)
 
 
 	def draw_box(self, LL, width, height, color=WHITE):
