@@ -21,6 +21,12 @@ Things that the Lightcube could display:
 * The status of your code build after the most recent commit
 * Up/down status of all of your servers, by server type
 
+Lightcube Simulator
+-------------------
+A simulator is provided for the Arduino Ethernet for those that want to try out the application without
+building the Lightcube.
+![Lightcube simulator](https://dl.dropboxusercontent.com/u/16837290/output.chrissnell.com/Lightcube_simulator.png)
+
 Architecture
 ------------
 
