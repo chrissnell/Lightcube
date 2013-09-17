@@ -36,6 +36,7 @@ class Frame(object):
 
 		# Display Parameters
 		# This is where we define the width and height (in LEDs) of our Lightcube
+		# TODO: Move this into a config file
 		self._DISP_WIDTH = 8
 		self._DISP_HEIGHT = 8
 
@@ -86,10 +87,10 @@ class FramePacket(Structure):
 
 	frame=Frame()
 
-	# calculate the size (in bytes) of our frame data
+	# calculate the size (in bytes) of our frame data (height * width * 3-byte RGB)
 	frame_data_size = frame._DISP_WIDTH * frame._DISP_HEIGHT * 3
 
-	# Define the data structure of our packet using the ctypes modules
+	# Define the data structure of our packet using the ctypes module
 	_fields_ = [ ('header', c_uint8), ('proto_version', c_uint8), \
 	             ('display_width', c_uint8), ('display_height', c_uint8), \
 	             ('retain_delay', c_uint8), ('RESERVED_SPACE', c_uint8 * 3), \
@@ -100,11 +101,6 @@ class AssembledFramePacket(object):
 	def __init__(self,frame):
 		self._frame = frame
 
-	# c = (a << 4) + b
-	# packed = struct.pack('!H',c)
-	# unpacked = struct.unpack('!H',packed)
-	# a1 = bin(unpacked[0] >> 4)
-	# b1= bin(unpacked[0] & 0b00001111)
 
 	def create_packet(self):
 
@@ -117,22 +113,13 @@ class AssembledFramePacket(object):
 		for row in self._frame._data:
 			# Iterate through each column of the row
 			for color in row:
-				#print('Color is: {} --> ({}, {}, {})'.format(
-				#	hex(color.rgb),
-				#	color.get_red(),
-				#	color.get_green(),
-				#	color.get_blue()))
-
 				# Append each color component to the list
 				frame_data.append(color.get_red())
 				frame_data.append(color.get_green())
 				frame_data.append(color.get_blue())
 
-
-		# print "frame_data:  \n" + str((c for c in frame_data))
-
+		# This is our frame data, cast as the appropriately sized c_uint8
 		frame_data_ctype = (c_uint8 * len(frame_data))(*frame_data)
-
 
 		# Frame ID
 		FRAME_ID = 0x7
@@ -162,24 +149,12 @@ class AssembledFramePacket(object):
 		self.packet = FramePacket(f_header, PROTO_VER, self._frame._DISP_WIDTH, self._frame._DISP_HEIGHT, \
 		                          retain_delay, RESERVED_SPACE, frame_data_ctype)
 
-		# For debugging
-		# print "f_header: " + str(f_header)
-		# print "retain_delay: " + str(retain_delay)
-		# print "DISP_HEIGHT: " + str(self.packet.display_height)
-		#f = open("foo","wb")
-		#f.write(self.packet)
-		#f.close()
-
-
 	def send_packet(self,dest,port):
 
 		# Create a new UDP socket 
 		sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 		sock.sendto(self.packet, (dest,port))
 		print("Sending packet to {}:{}".format(dest, port))
-
-
-
 
 
 class FrameRenderer(object):
@@ -197,8 +172,6 @@ class FrameRenderer(object):
 		if start > finish:
 			# We'll need to count backwards (by -1)...and be inclusive (so we subtract 1 from finish)
 			return range(first, last - 1, -1)
-
-
 
 	def draw_line(self, start, end, color=WHITE):
 		#
@@ -245,9 +218,7 @@ class FrameRenderer(object):
 				self._frame.set_color_at(y,x, color)
 			else:
 				self._frame.set_color_at(x,y, color)
-
 			error = error - delta_y
-
 			if error < 0:
 				y = y + y_step
 				error = error + delta_x
@@ -267,8 +238,6 @@ class FrameRenderer(object):
 		#			height - The height of the box
 		#			color - Color used to draw line (of class "Color") [optional]
 		#
-
-
 		# LL -> Lower Left corner
 		# LR -> Lower Right corner
 		# UL -> Upper Left corner
@@ -295,8 +264,3 @@ class FrameRenderer(object):
 			line_end = Coordinate(x, UL_y)
 			self.draw_line(line_start, line_end, color)
 			x += 1
-
-		# For debugging
-		# print "LL: (" + str(LL.x) + "," + str(LL.y) + ")"
-		# print "width: " + str(width) + "   height: " + str(height)
-		# print "UR: (" + str(LR_x) + "," + str(UL_y) + ")"
