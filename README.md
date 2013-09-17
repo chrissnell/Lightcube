@@ -103,3 +103,8 @@ The Lightcube packets are constructed as follows:
                                      For an 8x8 Lightcube, this would be 200 bytes (8 bytes frame header, 
                                      192 bytes frame data).
 ```
+
+To Do
+-----
+* Move drawing library logic to RESTful API (eve-based?)
+* Create simple drawing libraries for various languages that call this RESTful API
