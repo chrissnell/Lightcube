@@ -1,3 +1,7 @@
+#
+# lightcube_client.py - A demo client that uses the drawing library to draw a few simple primatives and
+#                       send them to the Lightcube (or simulator app) 
+
 import Lightcube
 
 # Define some generic colors
@@ -29,9 +33,7 @@ myrenderer.draw_line(line_start, line_end, GREEN)
 
 
 myrenderer.draw_line(Lightcube.Coordinate(x=4, y=0), Lightcube.Coordinate(x=4, y=2), BLUE)
-
 myrenderer.draw_line(Lightcube.Coordinate(x=5, y=0), Lightcube.Coordinate(x=5, y=1), BLUE)
-
 myrenderer.draw_line(Lightcube.Coordinate(x=7, y=0), Lightcube.Coordinate(x=2, y=7), YELLOW)
 
 myrenderer.draw_point(Lightcube.Coordinate(x=5, y=5), WHITE)
@@ -42,13 +44,6 @@ myrenderer.draw_point(Lightcube.Coordinate(x=7, y=7), WHITE)
 myrenderer.draw_point(Lightcube.Coordinate(x=7, y=6), WHITE)
 myrenderer.draw_point(Lightcube.Coordinate(x=7, y=5), WHITE)
 myrenderer.draw_point(Lightcube.Coordinate(x=6, y=5), WHITE)
-
-
-
-
-
-
-
 
 # Create a new assembled frame packet
 packet = Lightcube.AssembledFramePacket(frame=myframe)
