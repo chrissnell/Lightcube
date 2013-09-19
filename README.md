@@ -96,7 +96,7 @@ The Lightcube packets are constructed as follows:
 
                                      A total of 24 bits of color data is sent for each pixel, 8 bits per color for the 
                                      red (RED),green (GRN), and blue (BLU) components.  The 8-bit color value indicates
-                                     the brightness for that component.  0xFF is maximum brightness, 0xFF is full dark.
+                                     the brightness for that component.  0xFF is maximum brightness, 0x00 is full dark.
                                      So, 0xFF 0xFF 0xFF would produce a bright white color in a pixel.
 
                                      The total packet size is determined by the Display Width and Display Height values.
