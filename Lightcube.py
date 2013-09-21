@@ -39,7 +39,9 @@ class Frame(object):
 		# TODO: Move this into a config file
 		self._DISP_WIDTH = 8
 		self._DISP_HEIGHT = 8
-
+		
+                # Create a multi-dimensional xrange object (sized to our display) and pre-load it with
+                # black pixels.
 		self._data = [[BLACK for x in xrange(self._DISP_WIDTH)] for x in xrange(self._DISP_HEIGHT)]
 
 	def set_color_at(self, x, y, color):
