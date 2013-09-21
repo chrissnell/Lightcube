@@ -9,7 +9,8 @@ A colorful, programmable information visualizer for your desk.  The Lightcube is
 of RGB LEDs enclosed in a small wooden cube and connected to the network via WiFi/Ethernet.
 Client applications can use a simple Python library to draw simple graphics primitives such as
 dots, lines, boxes, bar graphs, etc., and send them over the network to the Lightcube.   The Lightcube
-runs a simple framebuffer that displays whatever data is sent to it.   
+runs a simple framebuffer that displays whatever data is sent to it.  Using the easy-to-use library, 
+the user can visualize any data that can be captured within their code.
  </td>
 </tr>
 </table>
